@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investment Intelligence — Demo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+:root {
+  --bg: #f8f9fa; --surface: #ffffff; --surface2: #f0f1f3; --surface3: #e5e7eb;
+  --border: #d1d5db; --border2: #9ca3af;
+  --text: #111827; --text2: #4b5563; --text3: #9ca3af;
+  --accent: #2563eb; --accent2: #1d4ed8; --accent-bg: rgba(37,99,235,0.06);
+  --high: #dc2626; --high-bg: rgba(220,38,38,0.08);
+  --medium: #d97706; --medium-bg: rgba(217,119,6,0.08);
+  --low: #16a34a; --low-bg: rgba(22,163,74,0.08);
+  --purple: #7c3aed; --purple-bg: rgba(124,58,237,0.06);
+  --star: #ca8a04;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+.demo-banner { background: var(--medium-bg); border-bottom: 2px solid var(--medium); padding: 10px 0; text-align: center; font-size: 0.82rem; color: var(--medium); font-weight: 600; }
+.hero { background: #fff; border-bottom: 1px solid var(--border); padding: 28px 0 24px; margin-bottom: 24px; }
+.hero-inner { display: flex; justify-content: space-between; align-items: flex-start; }
+.hero-title { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+.hero-title span { color: var(--accent); }
+.hero-sub { color: var(--text2); font-size: 0.82rem; margin-top: 2px; }
+.hero-actions { display: flex; gap: 10px; align-items: center; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--low); display: inline-block; margin-right: 5px; }
+.status-text { font-size: 0.76rem; color: var(--text3); }
+.btn { border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; font-family: inherit; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-ghost { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+.stat-card .num { font-size: 1.6rem; font-weight: 700; }
+.stat-card .label { font-size: 0.66rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.04em; }
+.stat-high .num { color: var(--high); } .stat-med .num { color: var(--medium); }
+.stat-new .num { color: var(--accent); } .stat-fav .num { color: var(--star); }
+.stat-total .num { color: var(--text3); }
+.source-bar { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.source-pill { display: flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); font-size: 0.73rem; color: var(--text2); }
+.source-pill.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+.source-pill .dot { width: 5px; height: 5px; border-radius: 50%; }
+.source-pill .dot.ok { background: var(--low); }
+.source-pill .count { background: var(--surface2); padding: 0 5px; border-radius: 8px; font-size: 0.68rem; }
+.search-bar { margin-bottom: 12px; }
+.search-bar input { width: 100%; padding: 9px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 0.83rem; font-family: inherit; outline: none; }
+.filter-bar { display: flex; gap: 5px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+.fbtn { padding: 4px 12px; border-radius: 6px; border: 1px solid transparent; background: transparent; color: var(--text3); font-size: 0.76rem; font-family: inherit; font-weight: 500; }
+.fbtn.active { background: var(--surface); color: var(--text); border-color: var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+.sep { width: 1px; background: var(--border); margin: 0 3px; }
+.article { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-bottom: 8px; }
+.article.high-priority { border-left: 3px solid var(--high); }
+.article.med-priority { border-left: 3px solid var(--medium); }
+.article-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+.article-title { font-size: 0.9rem; font-weight: 600; line-height: 1.4; flex: 1; color: var(--text); }
+.score { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.score-bar { width: 44px; height: 5px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 3px; }
+.score-fill.high { background: var(--high); } .score-fill.med { background: var(--medium); }
+.score-num { font-size: 0.7rem; font-weight: 700; min-width: 20px; text-align: right; }
+.score-num.high { color: var(--high); } .score-num.med { color: var(--medium); }
+.article-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.meta-source { font-size: 0.72rem; font-weight: 500; color: var(--purple); background: var(--purple-bg); padding: 1px 8px; border-radius: 4px; }
+.meta-date { font-size: 0.72rem; color: var(--text3); }
+.meta-badge { font-size: 0.68rem; padding: 1px 7px; border-radius: 4px; font-weight: 600; }
+.meta-badge.urgent { color: var(--high); background: var(--high-bg); }
+.meta-badge.watch { color: var(--medium); background: var(--medium-bg); }
+.article-body { color: var(--text2); font-size: 0.82rem; line-height: 1.6; }
+.article-action { margin-top: 8px; padding: 8px 12px; background: var(--accent-bg); border: 1px solid rgba(37,99,235,0.12); border-radius: 6px; font-size: 0.78rem; color: var(--accent2); line-height: 1.5; }
+.article-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+.tag { background: var(--surface2); color: var(--text3); padding: 1px 7px; border-radius: 4px; font-size: 0.66rem; font-weight: 500; }
+.triage { display: flex; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--surface3); }
+.tri { padding: 3px 10px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text3); font-size: 0.72rem; font-family: inherit; }
+@media (max-width: 700px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } .hero-inner { flex-direction: column; gap: 12px; } }
+</style>
+</head>
+<body>
+<div class="demo-banner">DEMO — This page displays dummy data for portfolio demonstration purposes</div>
+
+<div class="hero"><div class="container hero-inner">
+  <div>
+    <div class="hero-title"><span>Investment Intelligence</span></div>
+    <div class="hero-sub">AI Server / Semiconductor — Feed Analysis & Triage</div>
+  </div>
+  <div class="hero-actions">
+    <div><span class="status-dot"></span><span class="status-text">3分前</span></div>
+    <button class="btn btn-ghost">CSV</button>
+    <button class="btn btn-primary">更新</button>
+  </div>
+</div></div>
+
+<div class="container">
+  <div class="stats-grid">
+    <div class="stat-card stat-new"><div class="num">12</div><div class="label">未読</div></div>
+    <div class="stat-card stat-fav"><div class="num">5</div><div class="label">お気に入り</div></div>
+    <div class="stat-card stat-high"><div class="num">3</div><div class="label">重要</div></div>
+    <div class="stat-card stat-med"><div class="num">8</div><div class="label">注目</div></div>
+    <div class="stat-card stat-total"><div class="num">47</div><div class="label">全件</div></div>
+  </div>
+
+  <div class="source-bar">
+    <div class="source-pill active">全ソース</div>
+    <div class="source-pill"><span class="dot ok"></span>Source A<span class="count">4</span></div>
+    <div class="source-pill"><span class="dot ok"></span>Source B<span class="count">3</span></div>
+    <div class="source-pill"><span class="dot ok"></span>Source C<span class="count">2</span></div>
+    <div class="source-pill"><span class="dot ok"></span>Source D<span class="count">2</span></div>
+    <div class="source-pill"><span class="dot ok"></span>Source E<span class="count">1</span></div>
+  </div>
+
+  <div class="search-bar"><input type="text" placeholder="キーワード検索: NVIDIA, HBM, CoWoS..."></div>
+
+  <div class="filter-bar">
+    <button class="fbtn active">未読</button>
+    <button class="fbtn">お気に入り</button>
+    <button class="fbtn">すべて</button>
+    <button class="fbtn">非表示</button>
+    <span class="sep"></span>
+    <button class="fbtn">重要度順</button>
+    <button class="fbtn active">日付順</button>
+  </div>
+
+  <div class="article high-priority">
+    <div class="article-top">
+      <div class="article-title">Next-Gen Memory Architecture Signals Major Shift in AI Infrastructure</div>
+      <div class="score"><div class="score-bar"><div class="score-fill high" style="width:90%"></div></div><div class="score-num high">9</div></div>
+    </div>
+    <div class="article-meta">
+      <span class="meta-source">Source A</span><span class="meta-date">2026年3月28日</span><span class="meta-badge urgent">緊急</span>
+    </div>
+    <div class="article-body">次世代メモリアーキテクチャの発表により、AIインフラ投資の方向性が大きく変わる可能性。データセンター向け大容量メモリの需要急増が見込まれ、関連サプライチェーンへの影響は広範囲に及ぶ。</div>
+    <div class="article-action">Action: メモリ関連銘柄のバリュエーション再評価を推奨。供給サイドの制約要因を確認すべき。</div>
+    <div class="article-tags"><span class="tag">Memory</span><span class="tag">AI Infrastructure</span><span class="tag">Data Center</span></div>
+    <div class="triage"><button class="tri">★ 保存</button><button class="tri">✕ 興味なし</button></div>
+  </div>
+
+  <div class="article high-priority">
+    <div class="article-top">
+      <div class="article-title">Advanced Packaging Capacity Expansion Accelerates Beyond Expectations</div>
+      <div class="score"><div class="score-bar"><div class="score-fill high" style="width:85%"></div></div><div class="score-num high">8</div></div>
+    </div>
+    <div class="article-meta">
+      <span class="meta-source">Source B</span><span class="meta-date">2026年3月27日</span><span class="meta-badge urgent">緊急</span>
+    </div>
+    <div class="article-body">先端パッケージング技術の生産能力増強が予想を上回るペースで進行中。2027年までに現在の2.5倍の生産能力が確保される見通し。ボトルネック解消により、AIアクセラレータの出荷が加速する可能性。</div>
+    <div class="article-action">Action: パッケージング装置メーカーの受注動向を注視。設備投資サイクルの前倒しを確認すべき。</div>
+    <div class="article-tags"><span class="tag">Packaging</span><span class="tag">Capacity</span><span class="tag">Equipment</span></div>
+    <div class="triage"><button class="tri">★ 保存</button><button class="tri">✕ 興味なし</button></div>
+  </div>
+
+  <div class="article med-priority">
+    <div class="article-top">
+      <div class="article-title">Optical Interconnect Adoption Reaches Inflection Point in Hyperscale Data Centers</div>
+      <div class="score"><div class="score-bar"><div class="score-fill med" style="width:70%"></div></div><div class="score-num med">7</div></div>
+    </div>
+    <div class="article-meta">
+      <span class="meta-source">Source C</span><span class="meta-date">2026年3月26日</span><span class="meta-badge watch">注視</span>
+    </div>
+    <div class="article-body">ハイパースケーラーのデータセンターにおける光インターコネクトの採用が変曲点に到達。800G/1.6Tトランシーバーの需要が急増し、サプライヤーは生産能力の確保に追われている。</div>
+    <div class="article-tags"><span class="tag">Optical</span><span class="tag">Networking</span><span class="tag">Hyperscaler</span></div>
+    <div class="triage"><button class="tri">★ 保存</button><button class="tri">✕ 興味なし</button></div>
+  </div>
+
+  <div class="article med-priority">
+    <div class="article-top">
+      <div class="article-title">AI Inference Cost Reduction Drives New Architecture Paradigms</div>
+      <div class="score"><div class="score-bar"><div class="score-fill med" style="width:60%"></div></div><div class="score-num med">6</div></div>
+    </div>
+    <div class="article-meta">
+      <span class="meta-source">Source D</span><span class="meta-date">2026年3月25日</span>
+    </div>
+    <div class="article-body">AI推論コストの削減が新たなアーキテクチャパラダイムを推進。専用推論チップの市場が急拡大し、汎用GPUとの棲み分けが進む。エッジ推論の需要も増加傾向。</div>
+    <div class="article-tags"><span class="tag">Inference</span><span class="tag">Cost</span><span class="tag">Architecture</span></div>
+    <div class="triage"><button class="tri">★ 保存</button><button class="tri">✕ 興味なし</button></div>
+  </div>
+
+  <div class="article">
+    <div class="article-top">
+      <div class="article-title">Power Delivery Challenges in Next-Generation AI Clusters</div>
+      <div class="score"><div class="score-bar"><div class="score-fill med" style="width:50%"></div></div><div class="score-num med">5</div></div>
+    </div>
+    <div class="article-meta">
+      <span class="meta-source">Source E</span><span class="meta-date">2026年3月24日</span>
+    </div>
+    <div class="article-body">次世代AIクラスターにおける電力供給の課題が顕在化。1ラックあたりの消費電力が100kWを超える設計が一般化しつつあり、冷却・配電インフラの大規模な刷新が必要。</div>
+    <div class="article-tags"><span class="tag">Power</span><span class="tag">Cooling</span><span class="tag">Infrastructure</span></div>
+    <div class="triage"><button class="tri">★ 保存</button><button class="tri">✕ 興味なし</button></div>
+  </div>
+</div>
+</body>
+</html>
